@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+${SNAP}/bin/wait-for-configure.sh
+
 set -a
 . ${SNAP_DATA}/config/wishlist.env
 set +a

@@ -6,3 +6,4 @@ BUILD_DIR=${DIR}/../build/snap
 
 ${BUILD_DIR}/bin/cli --help
 ${BUILD_DIR}/meta/hooks/configure --help
+${BUILD_DIR}/meta/hooks/post-refresh --help

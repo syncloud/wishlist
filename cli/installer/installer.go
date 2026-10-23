@@ -2,6 +2,7 @@ package installer
 
 import (
 	"fmt"
+	"os"
 	"path"
 
 	"github.com/syncloud/golib/linux"
@@ -10,10 +11,10 @@ import (
 )
 
 const (
-	App       = "wishlist"
-	AppDir    = "/snap/wishlist/current"
-	DataDir   = "/var/snap/wishlist/current"
-	CommonDir = "/var/snap/wishlist/common"
+	App          = "wishlist"
+	AppDir       = "/snap/wishlist/current"
+	DataDir      = "/var/snap/wishlist/current"
+	CommonDir    = "/var/snap/wishlist/common"
 	OIDCRedirect = "/login"
 )
 
@@ -32,7 +33,18 @@ func New(logger *zap.Logger) *Installer {
 }
 
 func (i *Installer) Configure() error {
-	return i.UpdateConfigs()
+	if err := i.UpdateConfigs(); err != nil {
+		return err
+	}
+	version, err := os.ReadFile(path.Join(AppDir, "version"))
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path.Join(DataDir, "version"), version, 0644)
+}
+
+func (i *Installer) PostRefresh() error {
+	return os.RemoveAll(path.Join(DataDir, "version"))
 }
 
 func (i *Installer) AccessChange() error {

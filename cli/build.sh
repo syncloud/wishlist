@@ -7,8 +7,10 @@ BIN_OUT=${DIR}/../build/snap/bin
 HOOKS_OUT=${DIR}/../build/snap/meta/hooks
 mkdir -p ${BIN_OUT} ${HOOKS_OUT}
 
+test -z "$(gofmt -l .)"
 go vet ./...
 go test ./...
 
-CGO_ENABLED=0 go build -buildvcs=false -o ${HOOKS_OUT}/configure ./cmd/configure
-CGO_ENABLED=0 go build -buildvcs=false -o ${BIN_OUT}/cli         ./cmd/cli
+CGO_ENABLED=0 go build -buildvcs=false -o ${HOOKS_OUT}/configure    ./cmd/configure
+CGO_ENABLED=0 go build -buildvcs=false -o ${HOOKS_OUT}/post-refresh ./cmd/post-refresh
+CGO_ENABLED=0 go build -buildvcs=false -o ${BIN_OUT}/cli          ./cmd/cli
