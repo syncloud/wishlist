@@ -85,7 +85,7 @@ local build(arch, test_ui) = [{
          {
            name: 'e2e',
            image: playwright,
-           commands: ['./test/e2e/run.sh specs/01-smoke.spec.ts'],
+           commands: ['./test/e2e/run.sh specs/01-family.spec.ts'],
          },
          {
            name: 'e2e-before-upgrade',
