@@ -1,0 +1,15 @@
+import type { Page } from '@playwright/test'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+
+const dir = process.env.PLAYWRIGHT_ARTIFACT_DIR ?? path.join('..', '..', 'artifact', 'screenshots')
+const prefix = process.env.SCREENSHOT_PREFIX ?? ''
+
+export async function capture(page: Page, name: string): Promise<void> {
+  fs.mkdirSync(dir, { recursive: true })
+  await page.screenshot({ path: path.join(dir, `${prefix}${name}.png`), fullPage: false })
+}
+
+export async function shoot(page: Page, name: string): Promise<void> {
+  await capture(page, name)
+}
