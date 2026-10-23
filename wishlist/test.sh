@@ -9,7 +9,9 @@ WORK=$(mktemp -d)
 ${NODE} --version
 
 cd ${APP}
-${NODE} -e "new (require('better-sqlite3'))(':memory:').prepare('select 1').get(); require('sharp'); require('re2'); console.log('native modules load ok')"
+SQLITE=$(ls -d node_modules/.pnpm/better-sqlite3@*/node_modules/better-sqlite3)
+RE2=$(ls -d node_modules/.pnpm/re2@*/node_modules/re2)
+${NODE} -e "new (require('./${SQLITE}'))(':memory:').prepare('select 1').get(); new (require('./${RE2}'))('a+').test('aa'); require('sharp')().metadata; console.log('native modules load ok')"
 
 export DATABASE_URL=file:${WORK}/test.db
 export SOCKET_PATH=${WORK}/wishlist.sock

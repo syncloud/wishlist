@@ -38,9 +38,25 @@ for i in $(seq 1 5); do
   sleep 10
 done
 
+pnpm exec svelte-kit sync
 pnpm prisma generate
 VERSION=${VERSION} SHA=$(git rev-parse HEAD) pnpm build
-pnpm prune --prod
+
+case $(uname -m) in
+  x86_64) CPU=x64 ;;
+  aarch64) CPU=arm64 ;;
+  *) echo "unsupported arch $(uname -m)"; exit 1 ;;
+esac
+rm -rf node_modules
+for i in $(seq 1 5); do
+  if pnpm install --frozen-lockfile --prod --os linux --cpu ${CPU} --libc glibc; then
+    break
+  fi
+  if [[ $i -eq 5 ]]; then
+    exit 1
+  fi
+  sleep 10
+done
 
 cp -a build node_modules package.json prisma prisma.config.ts templates ${APP_OUT}
 mkdir -p ${APP_OUT}/src/lib/generated

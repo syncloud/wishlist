@@ -1,7 +1,5 @@
-#!/bin/sh -ex
+#!/bin/bash -ex
 
-DIR=$( cd "$( dirname "$0" )" && pwd )
-cd ${DIR}
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-BUILD_DIR=${DIR}/../build/snap/nginx
-${BUILD_DIR}/bin/nginx.sh -version
+${DIR}/../build/snap/nginx/bin/nginx.sh -version
