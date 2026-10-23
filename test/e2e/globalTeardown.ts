@@ -7,11 +7,11 @@ import { execSync } from 'node:child_process'
 const TMP_DIR = '/tmp/syncloud/wishlist-ui'
 
 export default async function () {
-  const out = path.join(env('PLAYWRIGHT_ARTIFACT_DIR'), '..', 'log', `ui${process.env.SCREENSHOT_PREFIX ?? ''}`)
+  const out = path.join(env('PLAYWRIGHT_ARTIFACT_DIR'), '..', 'log')
   fs.mkdirSync(out, { recursive: true })
 
   ssh(`mkdir -p ${TMP_DIR}`, { throw: false })
-  ssh(`journalctl | tail -3000 > ${TMP_DIR}/journalctl.log`, { throw: false })
+  ssh(`journalctl | tail -3000 > ${TMP_DIR}/ui.journalctl.log`, { throw: false })
   scpFrom(`${TMP_DIR}/*`, out, { throw: false })
   try { execSync(`chmod -R a+r ${out}`) } catch {}
 }

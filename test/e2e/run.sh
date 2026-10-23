@@ -4,7 +4,6 @@ DIR=$(cd "$(dirname "$0")" && pwd)
 cd "$DIR"
 
 SPEC=$1
-PREFIX=$2
 
 export PLAYWRIGHT_FULL_DOMAIN=bookworm.com
 export PLAYWRIGHT_APP_DOMAIN=wishlist.bookworm.com
@@ -15,7 +14,6 @@ export PLAYWRIGHT_SSH_USER=root
 export PLAYWRIGHT_SSH_PASSWORD=Password1
 export PLAYWRIGHT_PROJECT=desktop
 export PLAYWRIGHT_ARTIFACT_DIR=/drone/src/artifact/screenshots
-export SCREENSHOT_PREFIX=${PREFIX}
 
 ${DIR}/../../apt.sh sshpass openssh-client curl
 getent hosts ${PLAYWRIGHT_APP_DOMAIN} | sed "s/${PLAYWRIGHT_APP_DOMAIN}/auth.${PLAYWRIGHT_FULL_DOMAIN}/g" | tee -a /etc/hosts

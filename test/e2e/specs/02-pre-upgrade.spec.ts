@@ -10,5 +10,5 @@ test('add a wish before the upgrade', async ({ page }) => {
   if (!(await hasItem(page, item))) {
     await addItem(page, item)
   }
-  await shoot(page, 'pre-upgrade')
+  await shoot(page, 'wishes-before-upgrade')
 })

@@ -7,5 +7,5 @@ test('wish added before the upgrade survives it', async ({ page }) => {
   await openMyList(page)
   await expectItem(page, 'Pre upgrade wish')
   await addItem(page, 'Post upgrade wish')
-  await shoot(page, 'post-upgrade')
+  await shoot(page, 'wishes-after-upgrade')
 })

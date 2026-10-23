@@ -90,7 +90,7 @@ local build(arch, test_ui) = [{
          {
            name: 'e2e-before-upgrade',
            image: playwright,
-           commands: ['./test/e2e/run.sh specs/02-pre-upgrade.spec.ts pre-upgrade-'],
+           commands: ['./test/e2e/run.sh specs/02-pre-upgrade.spec.ts'],
          },
          {
            name: 'test-upgrade',
@@ -100,7 +100,7 @@ local build(arch, test_ui) = [{
          {
            name: 'e2e-after-upgrade',
            image: playwright,
-           commands: ['./test/e2e/run.sh specs/03-post-upgrade.spec.ts post-upgrade-'],
+           commands: ['./test/e2e/run.sh specs/03-post-upgrade.spec.ts'],
          },
        ] else []) + [
     {

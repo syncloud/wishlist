@@ -26,6 +26,6 @@ test('sso login, admin settings locked to the platform, add a wish', async ({ pa
     await expect(page.getByTestId('list-container')).toBeVisible()
     await openMyList(page)
     await addItem(page, 'Smoke test wish')
-    await shoot(page, 'list-with-item')
+    await shoot(page, 'wish-added')
   })
 })
