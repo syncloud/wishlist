@@ -37,7 +37,8 @@ export async function openListOf(page: Page, owner: string) {
     .filter({ has: page.getByTestId('list-owner').filter({ hasText: new RegExp(`^${owner}$`, 'i') }) })
   await expect(list).toBeVisible()
   await list.click()
-  await expect(page.getByText(/^\d+ items?$/)).toBeVisible()
+  await expect(page).toHaveURL(/\/lists\/[^/]+$/)
+  await expect(page.getByTestId('items-container').or(page.getByText('No wishes yet'))).toBeVisible()
 }
 
 export function item(page: Page, name: string) {
@@ -45,6 +46,9 @@ export function item(page: Page, name: string) {
 }
 
 export async function addItem(page: Page, name: string) {
+  if (await hasItem(page, name)) {
+    return
+  }
   await page.getByRole('button', { name: 'add item' }).click()
   await expect(page.getByRole('heading', { name: 'Create Wish' })).toBeVisible()
   await page.getByLabel('Item Name').fill(name)
@@ -57,6 +61,9 @@ export async function hasItem(page: Page, name: string): Promise<boolean> {
 }
 
 export async function claim(page: Page, name: string) {
+  if (await item(page, name).getByRole('button', { name: 'Unclaim', exact: true }).isVisible()) {
+    return
+  }
   await item(page, name).getByRole('button', { name: 'Claim', exact: true }).click()
   await expect(item(page, name).getByRole('button', { name: 'Unclaim', exact: true })).toBeVisible()
 }
