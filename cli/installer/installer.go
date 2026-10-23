@@ -57,7 +57,7 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
-	secret, err := i.platformClient.RegisterOIDCClient(App, []string{OIDCRedirect}, true, "client_secret_basic")
+	secret, err := i.platformClient.RegisterOIDCClient(App, []string{OIDCRedirect}, true, "client_secret_post")
 	if err != nil {
 		return fmt.Errorf("oidc register: %w", err)
 	}
