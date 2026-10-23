@@ -27,6 +27,7 @@ test('a family shares wishlists and claims a gift without spoiling it', async ({
     await adminPage.getByRole('link', { name: 'Security' }).click()
     await expect(adminPage.locator('#oidcClientId')).toBeDisabled()
     await expect(adminPage.locator('#oidcClientId')).toHaveValue('wishlist')
+    await expect(adminPage.locator('#oidcClientSecret')).toBeDisabled()
     await expect(adminPage.locator('#oidcAdminGroup')).toHaveValue('syncloud')
     await expect(adminPage.locator('#disablePasswordLogin')).toBeDisabled()
     await shoot(adminPage, 'admin-security')

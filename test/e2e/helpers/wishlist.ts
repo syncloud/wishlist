@@ -25,7 +25,8 @@ export async function login(page: Page, username: string, password: string) {
 }
 
 export async function goToLists(page: Page) {
-  await page.getByRole('link', { name: 'Lists' }).first().click()
+  await page.getByRole('link', { name: 'Home', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Lists', exact: true })).toBeVisible()
   await expect(page.getByTestId('list-container')).toBeVisible()
 }
 
@@ -33,10 +34,10 @@ export async function openListOf(page: Page, owner: string) {
   const list = page
     .getByTestId('list-container')
     .locator('a.card')
-    .filter({ has: page.getByTestId('list-name').filter({ hasText: new RegExp(owner, 'i') }) })
+    .filter({ has: page.getByTestId('list-owner').filter({ hasText: new RegExp(`^${owner}$`, 'i') }) })
   await expect(list).toBeVisible()
   await list.click()
-  await expect(page.getByRole('heading', { name: new RegExp(owner, 'i') }).first()).toBeVisible()
+  await expect(page.getByText(/^\d+ items?$/)).toBeVisible()
 }
 
 export function item(page: Page, name: string) {
