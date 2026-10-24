@@ -61,6 +61,13 @@ def test_services_started_cleanly(device):
     assert_no_restarts(device, APP)
 
 
+@pytest.mark.parametrize('module', ['better-sqlite3', 're2', 'sharp'])
+def test_native_module_loads(device, module):
+    app_dir = '/snap/{0}/current/wishlist'.format(APP)
+    path = device.run_ssh('ls -d {0}/node_modules/.pnpm/{1}@*/node_modules/{1}'.format(app_dir, module)).strip()
+    device.run_ssh(r'/snap/{0}/current/node/node.sh -e require\(process.argv[1]\) {1}'.format(APP, path))
+
+
 def test_env_not_world_readable(device):
     mode = device.run_ssh('stat -c %a /var/snap/{0}/current/config/wishlist.env'.format(APP))
     assert mode.strip() == '600'
