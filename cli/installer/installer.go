@@ -32,6 +32,10 @@ func New(logger *zap.Logger) *Installer {
 	}
 }
 
+func (i *Installer) Install() error {
+	return linux.CreateUser(App)
+}
+
 func (i *Installer) Configure() error {
 	if err := i.UpdateConfigs(); err != nil {
 		return err

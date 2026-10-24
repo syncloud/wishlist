@@ -11,6 +11,7 @@ test -z "$(gofmt -l .)"
 go vet ./...
 go test ./...
 
+CGO_ENABLED=0 go build -buildvcs=false -o ${HOOKS_OUT}/install      ./cmd/install
 CGO_ENABLED=0 go build -buildvcs=false -o ${HOOKS_OUT}/configure    ./cmd/configure
 CGO_ENABLED=0 go build -buildvcs=false -o ${HOOKS_OUT}/post-refresh ./cmd/post-refresh
 CGO_ENABLED=0 go build -buildvcs=false -o ${BIN_OUT}/cli          ./cmd/cli

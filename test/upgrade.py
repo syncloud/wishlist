@@ -7,7 +7,7 @@ from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from settle import settle
+from settle import settle, assert_no_restarts
 
 TMP_DIR = '/tmp/syncloud'
 APP = 'wishlist'
@@ -40,3 +40,7 @@ def test_upgrade(device_host, device_password, app_archive_path, app_domain):
 
 def test_socket(device):
     device.run_ssh('test -S /var/snap/{0}/current/wishlist.sock'.format(APP), retries=100)
+
+
+def test_services_started_cleanly(device):
+    assert_no_restarts(device, APP)
