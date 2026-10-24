@@ -58,9 +58,21 @@ for i in $(seq 1 5); do
   sleep 10
 done
 
+for i in $(seq 1 5); do
+  if node node_modules/prisma/build/index.js -v; then
+    break
+  fi
+  if [[ $i -eq 5 ]]; then
+    exit 1
+  fi
+  sleep 10
+done
+test -n "$(find node_modules/.pnpm -path '*/@prisma/engines/schema-engine-*' -type f ! -name '*.gz')"
+
 cp -a build node_modules package.json prisma prisma.config.ts templates ${APP_OUT}
 mkdir -p ${APP_OUT}/src/lib/generated
 cp -a src/lib/generated/prisma ${APP_OUT}/src/lib/generated/prisma
+test -z "$(find ${APP_OUT} -xtype l)"
 ln -s /var/snap/wishlist/current/uploads ${APP_OUT}/uploads
 
 du -sh ${APP_OUT}

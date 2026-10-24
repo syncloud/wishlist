@@ -1,6 +1,6 @@
 local name = 'wishlist';
 local wishlist_repo = 'https://github.com/cyberb/wishlist.git';
-local wishlist_ref = '702d722cdbcb44619a6300c4e6344f48d2746862';
+local wishlist_ref = 'c255cf666f044135a5bb2a4a2bffdfc524ce6564';
 local wishlist_version = 'v0.69.0';
 local node = '24.22.1';
 local nginx = '1.30.6';
