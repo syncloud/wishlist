@@ -1,0 +1,29 @@
+name: wishlist
+summary: Wishlist
+description: Share wishlists with friends and family and claim gifts without spoiling the surprise
+
+apps:
+  wishlist:
+    user: wishlist
+    command: bin/service.wishlist.sh
+    daemon: simple
+    restart-condition: always
+    start-timeout: 600s
+    restart-delay: 10s
+
+  nginx:
+    user: wishlist
+    command: bin/service.nginx.sh
+    daemon: simple
+    restart-condition: always
+    start-timeout: 600s
+    restart-delay: 10s
+
+  cli:
+    command: bin/cli
+
+  access-change:
+    command: bin/cli access-change
+
+  restore-pre-start:
+    command: bin/cli restore-pre-start
