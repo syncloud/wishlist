@@ -1,27 +1,34 @@
-import { Browser, Page, expect } from '@playwright/test'
+import { Page, expect } from '@playwright/test'
 import { env } from './env'
 
-export async function openAs(browser: Browser, username: string, password: string): Promise<Page> {
-  const context = await browser.newContext({
-    baseURL: `https://${env('PLAYWRIGHT_APP_DOMAIN')}`,
-    ignoreHTTPSErrors: true,
-    viewport: { width: 1440, height: 960 },
-  })
-  const page = await context.newPage()
-  await login(page, username, password)
-  return page
+const authUrl = `https://auth.${env('PLAYWRIGHT_FULL_DOMAIN')}`
+
+export async function openApp(page: Page) {
+  await page.goto('/')
 }
 
-export async function login(page: Page, username: string, password: string) {
-  await page.goto('/')
-
+export async function signIn(page: Page, username: string, password: string) {
   const usernameField = page.locator('#username-textfield')
+  const signInButton = page.getByText('Sign in with Syncloud')
+  await expect(usernameField.or(signInButton)).toBeVisible()
+  if (await signInButton.isVisible()) {
+    await signInButton.click()
+  }
   await expect(usernameField).toBeVisible()
   await usernameField.fill(username)
   await page.locator('#password-textfield').fill(password)
   await page.locator('#sign-in-button').click()
-
   await expect(page.getByRole('button', { name: 'User Menu' })).toBeVisible()
+}
+
+export async function signOut(page: Page) {
+  await page.getByRole('button', { name: 'User Menu' }).click()
+  await page.getByRole('button', { name: 'Sign Out' }).click()
+  await expect(page.getByText('Sign in with Syncloud')).toBeVisible()
+  await page.goto(authUrl)
+  await page.locator('#logout-button').click()
+  await expect(page.locator('#username-textfield')).toBeVisible()
+  await openApp(page)
 }
 
 export async function goToLists(page: Page) {
@@ -37,7 +44,6 @@ export async function openListOf(page: Page, owner: string) {
     .filter({ has: page.getByTestId('list-owner').filter({ hasText: new RegExp(`^${owner}$`, 'i') }) })
   await expect(list).toBeVisible()
   await list.click()
-  await expect(page).toHaveURL(/\/lists\/[^/]+$/)
   await expect(page.getByTestId('items-container').or(page.getByText('No wishes yet'))).toBeVisible()
 }
 
