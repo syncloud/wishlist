@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test'
 import { env } from './env'
 
-const authUrl = `https://auth.${env('PLAYWRIGHT_FULL_DOMAIN')}`
+const deviceUrl = `https://${env('PLAYWRIGHT_FULL_DOMAIN')}`
 
 export async function openApp(page: Page) {
   await page.goto('/')
@@ -25,8 +25,8 @@ export async function signOut(page: Page) {
   await page.getByRole('button', { name: 'User Menu' }).click()
   await page.getByRole('button', { name: 'Sign Out' }).click()
   await expect(page.getByText('Sign in with Syncloud')).toBeVisible()
-  await page.goto(authUrl)
-  await page.locator('#logout-button').click()
+  await page.goto(deviceUrl)
+  await page.locator('#logout').click()
   await expect(page.locator('#username-textfield')).toBeVisible()
   await openApp(page)
 }

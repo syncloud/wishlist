@@ -17,6 +17,7 @@ export PLAYWRIGHT_ARTIFACT_DIR=/drone/src/artifact/screenshots
 
 ${DIR}/../../apt.sh sshpass openssh-client curl
 getent hosts ${PLAYWRIGHT_APP_DOMAIN} | sed "s/${PLAYWRIGHT_APP_DOMAIN}/auth.${PLAYWRIGHT_FULL_DOMAIN}/g" | tee -a /etc/hosts
+getent hosts ${PLAYWRIGHT_APP_DOMAIN} | sed "s/${PLAYWRIGHT_APP_DOMAIN}/${PLAYWRIGHT_FULL_DOMAIN}/g" | tee -a /etc/hosts
 ${DIR}/wait-app.sh ${PLAYWRIGHT_APP_DOMAIN}
 npm ci --no-audit --no-fund
 npx playwright test --project=${PLAYWRIGHT_PROJECT} "$SPEC"
