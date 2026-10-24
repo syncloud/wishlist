@@ -24,7 +24,12 @@ func TestConfigs_Generate(t *testing.T) {
 
 	env, err := os.ReadFile(path.Join(outDir, "wishlist.env"))
 	assert.NoError(t, err)
-	assert.Equal(t, "ORIGIN=https://wishlist.example.com\nOIDC_DISCOVERY_URL=https://auth.example.com\nOIDC_CLIENT_SECRET=secret\n", string(env))
+	assert.Contains(t, string(env), "\nDATABASE_URL=file:/var/snap/wishlist/current/wishlist.db\n")
+	assert.Contains(t, string(env), "\nSOCKET_PATH=/var/snap/wishlist/current/wishlist.sock\n")
+	assert.Contains(t, string(env), "\nORIGIN=https://wishlist.example.com\n")
+	assert.Contains(t, string(env), "\nOIDC_DISCOVERY_URL=https://auth.example.com\n")
+	assert.Contains(t, string(env), "\nOIDC_CLIENT_SECRET=secret\n")
+	assert.NotContains(t, string(env), "{{")
 
 	info, err := os.Stat(path.Join(outDir, "wishlist.env"))
 	assert.NoError(t, err)
