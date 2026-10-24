@@ -8,7 +8,7 @@ from syncloudlib.http import wait_for_rest
 from syncloudlib.integration.hosts import add_host_alias
 from syncloudlib.integration.installer import local_install
 
-from settle import settle, assert_no_restarts
+from settle import settle, assert_no_restarts, wait_for_socket
 
 TMP_DIR = '/tmp/syncloud'
 APP = 'wishlist'
@@ -24,6 +24,8 @@ def module_setup(request, device, artifact_dir):
         device.run_ssh('ls -la /var/snap/{0}/common > {1}/var.common.ls.log'.format(APP, TMP_DIR), throw=False)
         device.run_ssh('cp /var/snap/{0}/current/config/nginx.conf {1}/nginx.conf.log'.format(APP, TMP_DIR), throw=False)
         device.run_ssh('cat /var/snap/platform/current/config/authelia/config.yml > {0}/authelia.config.yml.log'.format(TMP_DIR), throw=False)
+        device.run_ssh('systemctl status snap.{0}.* --no-pager > {1}/systemctl.status.log'.format(APP, TMP_DIR), throw=False)
+        device.run_ssh('journalctl -u snap.{0}.wishlist -u snap.{0}.nginx --no-pager > {1}/wishlist.journal.log'.format(APP, TMP_DIR), throw=False)
         device.run_ssh('top -bn 1 -w 500 -c > {0}/top.log'.format(TMP_DIR), throw=False)
         device.run_ssh('ps auxfw > {0}/ps.log'.format(TMP_DIR), throw=False)
         device.run_ssh('netstat -nlp > {0}/netstat.log'.format(TMP_DIR), throw=False)
@@ -54,7 +56,7 @@ def test_install(app_archive_path, device_host, device_password, device):
 
 
 def test_socket(device):
-    device.run_ssh('test -S /var/snap/{0}/current/wishlist.sock'.format(APP), retries=100)
+    wait_for_socket(device, APP)
 
 
 def test_services_started_cleanly(device):
@@ -119,5 +121,5 @@ def test_reinstall(app_archive_path, device_host, device_password, app_domain):
 
 
 def test_services_started_cleanly_after_reinstall(device):
-    device.run_ssh('test -S /var/snap/{0}/current/wishlist.sock'.format(APP), retries=100)
+    wait_for_socket(device, APP)
     assert_no_restarts(device, APP)
