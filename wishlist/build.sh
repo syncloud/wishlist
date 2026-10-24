@@ -67,11 +67,14 @@ for i in $(seq 1 5); do
   fi
   sleep 10
 done
-test -n "$(find node_modules/.pnpm -path '*/@prisma/engines/schema-engine-*' -type f ! -name '*.gz')"
+ENGINE=$(find node_modules/.pnpm -path '*/@prisma/engines/schema-engine-*' -type f ! -name '*.gz' | head -1)
+test -n "${ENGINE}"
 
 cp -a build node_modules package.json prisma prisma.config.ts templates ${APP_OUT}
 mkdir -p ${APP_OUT}/src/lib/generated
 cp -a src/lib/generated/prisma ${APP_OUT}/src/lib/generated/prisma
+cp ${ENGINE} ${APP_OUT}/schema-engine
+cp ${DIR}/schema-engine.sh ${APP_OUT}/schema-engine.sh
 test -z "$(find ${APP_OUT} -xtype l)"
 ln -s /var/snap/wishlist/current/uploads ${APP_OUT}/uploads
 

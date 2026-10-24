@@ -26,6 +26,7 @@ func TestConfigs_Generate(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Contains(t, string(env), "\nDATABASE_URL=file:/var/snap/wishlist/current/wishlist.db\n")
 	assert.Contains(t, string(env), "\nSOCKET_PATH=/var/snap/wishlist/current/wishlist.sock\n")
+	assert.Contains(t, string(env), "\nPRISMA_SCHEMA_ENGINE_BINARY=/snap/wishlist/current/wishlist/schema-engine.sh\n")
 	assert.Contains(t, string(env), "\nORIGIN=https://wishlist.example.com\n")
 	assert.Contains(t, string(env), "\nOIDC_DISCOVERY_URL=https://auth.example.com\n")
 	assert.Contains(t, string(env), "\nOIDC_CLIENT_SECRET=secret\n")
