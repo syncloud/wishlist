@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures'
 import { shoot } from '../helpers/screenshot'
 import { env } from '../helpers/env'
 import { addUser } from '../helpers/users'
-import { addItem, claim, goToLists, item, openApp, openListOf, signIn, signOut } from '../helpers/wishlist'
+import { addItem, addPricedItem, claim, goToLists, item, openApp, openListOf, signIn, signOut, submitItem } from '../helpers/wishlist'
 
 const admin = env('PLAYWRIGHT_DEVICE_USER')
 const adminPassword = env('PLAYWRIGHT_DEVICE_PASSWORD')
@@ -41,11 +41,23 @@ test('a family shares wishlists and claims a gift without spoiling it', async ({
     await expect(page.getByText('Settings saved')).toBeVisible()
   })
 
+  await test.step('admin sets the default currency to GBP', async () => {
+    await page.getByTestId('default-currency').selectOption('GBP')
+    await shoot(page, 'admin-default-currency')
+    const saved = page.waitForResponse((response) => response.url().includes('/admin/settings?/settings') && response.ok())
+    await page.getByTestId('save-settings').click()
+    await saved
+  })
+
   await test.step('admin adds wishes', async () => {
     await goToLists(page)
     await openListOf(page, admin)
     await addItem(page, 'Board game')
     await addItem(page, 'Coffee grinder')
+    await addPricedItem(page, 'Tea set', '25', 'GBP')
+    await shoot(page, 'admin-item-gbp')
+    await submitItem(page, 'Tea set')
+    await expect(item(page, 'Tea set').getByTestId('price')).toContainText('£25')
     await shoot(page, 'admin-wishes')
   })
 
