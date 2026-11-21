@@ -18,7 +18,13 @@ export async function signIn(page: Page, username: string, password: string) {
   await usernameField.fill(username)
   await page.locator('#password-textfield').fill(password)
   await page.locator('#sign-in-button').click()
-  await expect(page.getByRole('button', { name: 'User Menu' })).toBeVisible()
+  const userMenu = page.getByRole('button', { name: 'User Menu' })
+  const skipPasskey = page.getByTestId('passkey-skip')
+  await expect(userMenu.or(skipPasskey)).toBeVisible()
+  if (await skipPasskey.isVisible()) {
+    await skipPasskey.click()
+  }
+  await expect(userMenu).toBeVisible()
 }
 
 export async function signOut(page: Page) {
@@ -59,6 +65,18 @@ export async function addItem(page: Page, name: string) {
   await expect(page.getByRole('heading', { name: 'Create Wish' })).toBeVisible()
   await page.getByLabel('Item Name').fill(name)
   await page.getByRole('button', { name: 'Create item' }).click()
+  await expect(item(page, name)).toBeVisible()
+}
+
+export async function addPricedItem(page: Page, name: string, price: string, currency: string) {
+  await page.getByTestId('add-item').click()
+  await expect(page.getByTestId('currency-input')).toHaveValue(currency)
+  await page.getByTestId('item-name').fill(name)
+  await page.getByTestId('price-input').fill(price)
+}
+
+export async function submitItem(page: Page, name: string) {
+  await page.getByTestId('submit-item').click()
   await expect(item(page, name)).toBeVisible()
 }
 
